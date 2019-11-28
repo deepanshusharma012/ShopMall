@@ -12,7 +12,7 @@
   <style type="text/css">
   </style>
 </head>
-<body>
+<body onload="loadProducts()">
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
  	<div class="container-fluid">
@@ -24,7 +24,7 @@
 	      <li class="active"><a href="#">Home</a></li>
 	    </ul>
 	    <ul class="nav navbar-nav navbar-right">
-	      <li><!-- <a href="#" data-toggle="modal" data-target="#myModal"> --><a data-toggle="modal" href="#myModal">Add Product</a></li>
+	      <li><a data-toggle="modal" href="#myModal">Add Product</a></li>
 	      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 	      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 	    </ul>
@@ -41,7 +41,7 @@
   	</div>
 </nav>
 
-<br><br>
+<br><br><br>
 
 <div class="container" style="width:100%;">
  	<div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -95,23 +95,71 @@
 	      	<div class="modal-body">
 	      		<div class="form-group">
 	      			<br>
-				    <input type="text" class="form-control" name="userName" id="userName" placeholder="Product Name"><br>
-				    <input type="text" class="form-control" name="userName" id="userName" placeholder="Product Description"><br>
-				    <input type="text" class="form-control" name="userName" id="userName" placeholder="Product Amount"><br>
-				    <input type="text" class="form-control" name="userName" id="userName" placeholder="Product Quantity">
+				    <input type="text" class="form-control" id="txtProductName" placeholder="Product Name"><br>
+				    <input type="text" class="form-control" id="txtProductDesc" placeholder="Product Description"><br>
+				    <input type="text" class="form-control" id="txtProductPrice" placeholder="Product Amount"><br>
+				    <input type="text" class="form-control" id="txtProductQuantity" placeholder="Product Quantity">
 				</div>
 	      	</div>
 	      	<div class="modal-footer">
-	      		<button type="button" class="btn btn-success" data-dismiss="modal">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+	      		<button type="button" class="btn btn-success" id="addProductButton" data-dismiss="modal" onclick="addProduct()">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
 	        	<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 	      	</div>
 	    </div>
 	</div>
 </div>
   
-<div class="container">
+<br><br>
 
+<div class="container" id="productsDisp">
+	<!-- <div class="container-fluid" align="center">
+		<div class="col-sm-3">
+			<img class="images" src="img/8.jpg">
+			<div class="product_details">
+				<span id="productNameDisp" style="margin-top: 1vw;"><a href="#">{Product Name}</a></span><br>
+				<span id="productDescDisp">{Product Description}</span><br>
+				<span id="productAmountDisp">Rs {Product Amount}</span><br>
+				<span id="productQuantityDisp">Quantity :- {Product Quantity}</span><br>
+				<div class="btn-group" style="margin-top: 0.5vw;">
+				  <button type="button" class="btn btn-warning" onclick="editProduct()">Edit</button>
+				  <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
+				</div>
+				<div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+			</div>
+		</div>
+	</div>
+	<br>
+
+	<div class="container-fluid" align="center">
+		<div class="col-sm-3">
+			<img class="images" src="img/8.jpg">
+			<div class="product_details">
+				<span id="productNameDisp" style="margin-top: 1vw;"><a href="#">{Product Name}</a></span><br>
+				<span id="productDescDisp">{Product Description}</span><br>
+				<span id="productAmountDisp">Rs {Product Amount}</span><br>
+				<span id="productQuantityDisp">Quantity :- {Product Quantity}</span><br>
+				<div class="btn-group" style="margin-top: 0.5vw;">
+				  <button type="button" class="btn btn-warning" onclick="editProduct()">Edit</button>
+				  <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
+				</div>
+				<div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+			</div>
+		</div>
+	</div>
+	<br> -->
+</div>
+
+<br><br>
+
+<div class="footer">
+	<footer>
+		<center>
+			<p class="footer-text">Copyright | ©2019 ShopMall | All rights reserved</p>
+		</center>
+	</footer>
 </div>
 
 </body>
+<script src="main.js" type="text/javascript"></script>	
+
 </html>

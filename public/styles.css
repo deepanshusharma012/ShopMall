@@ -1,0 +1,36 @@
+.model-heading{
+	text-align: center;
+}
+
+.footer{
+	background-color: #333333;
+	width: 100%;
+	height: 43px;
+}
+
+.footer-text{
+	color: white;
+	font-size: 18px;
+	padding-top: 8px;
+}
+
+.images{
+	border: 1px solid #c2d6d6;
+}
+
+.product_details{
+	border: 1px solid #94b8b8;
+	width: 86%;
+}
+
+h5{
+	
+}
+
+h6{
+	font-size: 14px;
+}
+
+#productNameDisp{
+	font-size: 17px;
+}
