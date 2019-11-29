@@ -206,53 +206,17 @@ function displayProducts(objProduct)
 
 										   var obj = new Object();
 										   obj.Id = parseInt(targetParent.id);
-										   //console.log(obj);
 										   sendData(obj,3);
 										   
 										   products.splice(selectedProductIndex,1);
-										   //console.log(products);
 										   targetParent.parentNode.removeChild(targetParent);
 									  }
 							);
 
-    // btnAddButton.addEventListener("click", function(event)
-				// 							{
-				// 								 var x = parseInt(event.target.parentNode.id);
-				// 								 var selectedProductIndex = getProductIndex(x);
-												 
-				// 								 addToCart(selectedProductIndex);
-				// 							}
-				// 				 );
-
 	divListProducts.appendChild(divProduct);
 	
     insertBlankLine(divListProducts);
-
-	// var a = '<div class="container-fluid" id="';
-	// var x = '" align="center"><div class="col-sm-3"><img class="images" src="img/8.jpg"><div class="product_details"><span id="productNameDisp" style="margin-top: 1vw;"><a href="#">';
-	// var b = '</a></span><br><span id="productDescDisp">';
-	// var c = '</span><br><span id="productAmountDisp">Rs. ';
-	// var d = '</span><br><span id="productQuantityDisp">Quantity :- ';
-	// var e = '</span><br><div class="btn-group" style="margin-top: 0.5vw;"><button type="button" class="btn btn-warning" id="'+10000+objProduct.Id+'"  data-toggle="modal" data-target="#myModal1">Edit</button><button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button></div><div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div></div></div></div><br>';
-	// //var text=;
-
-	// $('#productsDisp').append(a+objProduct.Id+x+objProduct.Name+b+objProduct.Desc+c+objProduct.Price+d+objProduct.Quantity+e);
-
-	// var btnId=10000+objProduct.Id;
-	// var btnEdit = document.getElementById('btnId');
-	// btnEdit.addEventListener("click",function(event)
-	// 									  {
-	// 									  	var x = parseInt(event.target.parentNode.parentNode.parentNode.parentNode.id);
-	// 										selectedProductIndex = getProductIndex(x);
-
-	// 										document.getElementById('txtProductName1').value=products[selectedProductIndex].Name;
-	// 									 	document.getElementById('txtProductDesc1').value=products[selectedProductIndex].Desc;
-	// 									 	document.getElementById('txtProductPrice1').value=products[selectedProductIndex].Price;
-	// 									 	document.getElementById('txtProductQuantity1').value=products[selectedProductIndex].Quantity;
-
-	// 										 //editProductDetails(selectedProductIndex,selectedCartProductIndex);
-	// 									  }
-	// 						     );
+    
 }
 
 function insertBlankLine(targetElement)
@@ -271,6 +235,44 @@ function getProductIndex(id)
         } 
 			
     }
+}
+
+function deleteAllProducts()
+{
+	var e = document.getElementById('divListProducts');
+
+	var child = e.lastElementChild;  
+        while (child) { 
+            e.removeChild(child); 
+            child = e.lastElementChild; 
+        }
+}
+
+function searchData() 
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange=function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	    	
+	    	var data = JSON.parse(this.responseText);
+	    	if(data.Id!=null)
+	    	{
+	    		deleteAllProducts();
+	    		displayProducts(data);
+	    	}
+	    	else
+	    	{
+	    		alert("No data found!!");
+	    		document.getElementById('sname').value="";
+	    	}
+	    	
+	    }
+	};
+
+	var product_name=document.getElementById('sname').value;
+	xhttp.open("GET", "/productSearch?Name="+product_name);
+	xhttp.setRequestHeader("Content-Type", "application/json");
+	xhttp.send();
 }
 
 function sendData(objProduct,option)

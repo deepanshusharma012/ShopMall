@@ -16,7 +16,36 @@ fs.readFile('public/products.txt', (err, data) => {
 
 app.get('/loadProducts',function(req,res){
 	res.json(products);
+});
+
+app.get('/productSearch',function(req,res){
+
+	var obj = new Object();
+	var flag=0;
+
+	for(i=0;i<products.length;i++)
+	{
+		if(req.query.Name==products[i].Name)
+		{
+			obj=products[i];
+			flag=1;
+			break;
+		}
+	}
+	if(flag==1)
+    	res.json(obj);
+	else
+		res.json(obj); 
 })
+
+app.post('/addProduct',function(req,res){
+
+	products.push(req.body);
+
+	writeProductsFile();
+
+	res.send();
+});
 
 app.post('/editProduct',function(req,res){
 
@@ -33,7 +62,7 @@ app.post('/editProduct',function(req,res){
 	writeProductsFile();
 
 	res.send(); 
-})
+});
 
 app.post('/deleteProduct',function(req,res){
 
@@ -47,16 +76,7 @@ app.post('/deleteProduct',function(req,res){
 	writeProductsFile();
 
 	res.send(); 
-})
-
-app.post('/addProduct',function(req,res){
-
-	products.push(req.body);
-
-	writeProductsFile();
-
-	res.send();
-})
+});
 
 function getProductIndex(productId)
 {
