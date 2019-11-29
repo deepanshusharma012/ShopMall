@@ -22,6 +22,8 @@ function loadProducts()
 					productId++;
 				}
 			}
+
+			productId=max+1;
 	    }
 	};
 
@@ -88,7 +90,7 @@ function editProduct()
 
 function inputValidate(objProduct)
 {
-	var ProductNameRegex = /^[a-zA-Z0-9]+$/;
+	var ProductNameRegex = /^[a-zA-Z0-9 ]*$/;
 	var ProductDescRegex = /^[0-9A-Za-z!@.,;:'"? -]{10,200}?$/;
 	var ProductPricRegex = /^\d+(\.\d{0,2})?$/;
 	var ProductQuantityRegex = /^\d+$/;
@@ -197,9 +199,60 @@ function displayProducts(objProduct)
 										  }
 							     );
 
+    btnDelete.addEventListener("click",function(event)
+									  {
+										   var targetParent = event.target.parentNode;
+										   selectedProductIndex = getProductIndex(parseInt(targetParent.id));
+
+										   var obj = new Object();
+										   obj.Id = parseInt(targetParent.id);
+										   //console.log(obj);
+										   sendData(obj,3);
+										   
+										   products.splice(selectedProductIndex,1);
+										   //console.log(products);
+										   targetParent.parentNode.removeChild(targetParent);
+									  }
+							);
+
+    // btnAddButton.addEventListener("click", function(event)
+				// 							{
+				// 								 var x = parseInt(event.target.parentNode.id);
+				// 								 var selectedProductIndex = getProductIndex(x);
+												 
+				// 								 addToCart(selectedProductIndex);
+				// 							}
+				// 				 );
+
 	divListProducts.appendChild(divProduct);
 	
     insertBlankLine(divListProducts);
+
+	// var a = '<div class="container-fluid" id="';
+	// var x = '" align="center"><div class="col-sm-3"><img class="images" src="img/8.jpg"><div class="product_details"><span id="productNameDisp" style="margin-top: 1vw;"><a href="#">';
+	// var b = '</a></span><br><span id="productDescDisp">';
+	// var c = '</span><br><span id="productAmountDisp">Rs. ';
+	// var d = '</span><br><span id="productQuantityDisp">Quantity :- ';
+	// var e = '</span><br><div class="btn-group" style="margin-top: 0.5vw;"><button type="button" class="btn btn-warning" id="'+10000+objProduct.Id+'"  data-toggle="modal" data-target="#myModal1">Edit</button><button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button></div><div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div></div></div></div><br>';
+	// //var text=;
+
+	// $('#productsDisp').append(a+objProduct.Id+x+objProduct.Name+b+objProduct.Desc+c+objProduct.Price+d+objProduct.Quantity+e);
+
+	// var btnId=10000+objProduct.Id;
+	// var btnEdit = document.getElementById('btnId');
+	// btnEdit.addEventListener("click",function(event)
+	// 									  {
+	// 									  	var x = parseInt(event.target.parentNode.parentNode.parentNode.parentNode.id);
+	// 										selectedProductIndex = getProductIndex(x);
+
+	// 										document.getElementById('txtProductName1').value=products[selectedProductIndex].Name;
+	// 									 	document.getElementById('txtProductDesc1').value=products[selectedProductIndex].Desc;
+	// 									 	document.getElementById('txtProductPrice1').value=products[selectedProductIndex].Price;
+	// 									 	document.getElementById('txtProductQuantity1').value=products[selectedProductIndex].Quantity;
+
+	// 										 //editProductDetails(selectedProductIndex,selectedCartProductIndex);
+	// 									  }
+	// 						     );
 }
 
 function insertBlankLine(targetElement)
@@ -215,7 +268,8 @@ function getProductIndex(id)
         if (products[i].Id == id)
         {
         	return i;
-        } 			
+        } 
+			
     }
 }
 
@@ -230,6 +284,10 @@ function sendData(objProduct,option)
 	else if(option==2)
 	{
 		xhttp.open("POST", "/editProduct");
+	}
+	else if(option==3)
+	{
+		xhttp.open("POST", "/deleteProduct");
 	}
 
 	xhttp.setRequestHeader("Content-Type", "application/json");

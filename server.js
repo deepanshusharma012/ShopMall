@@ -19,16 +19,15 @@ app.get('/loadProducts',function(req,res){
 })
 
 app.post('/editProduct',function(req,res){
-	var productId = req.body.Id; 
-	for(i=0;i<products.length;i++)
+
+	var productIndex = getProductIndex(req.body.Id);
+
+	if(productIndex!=-1)
 	{
-		if(productId==products[i].Id)
-		{
-			products[i].Name=req.body.Name;
-			products[i].Desc=req.body.Desc;
-			products[i].Price=req.body.Price;
-			products[i].Quantity=req.body.Quantity;
-		}
+		products[i].Name=req.body.Name;
+		products[i].Desc=req.body.Desc;
+		products[i].Price=req.body.Price;
+		products[i].Quantity=req.body.Quantity;
 	}
 
 	writeProductsFile();
@@ -36,13 +35,40 @@ app.post('/editProduct',function(req,res){
 	res.send(); 
 })
 
+app.post('/deleteProduct',function(req,res){
+
+	var productIndex = getProductIndex(req.body.Id);
+
+	if(productIndex!=-1)
+	{
+		products.splice(productIndex,1);
+	}	
+
+	writeProductsFile();
+
+	res.send(); 
+})
+
 app.post('/addProduct',function(req,res){
+
 	products.push(req.body);
 
 	writeProductsFile();
 
 	res.send();
 })
+
+function getProductIndex(productId)
+{
+	for(i=0;i<products.length;i++)
+	{
+		if(productId==products[i].Id)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 
 function writeProductsFile()
 {
