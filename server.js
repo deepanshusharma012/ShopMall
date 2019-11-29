@@ -18,6 +18,24 @@ app.get('/loadProducts',function(req,res){
 	res.json(products);
 })
 
+app.post('/editProduct',function(req,res){
+	var productId = req.body.Id; 
+	for(i=0;i<products.length;i++)
+	{
+		if(productId==products[i].Id)
+		{
+			products[i].Name=req.body.Name;
+			products[i].Desc=req.body.Desc;
+			products[i].Price=req.body.Price;
+			products[i].Quantity=req.body.Quantity;
+		}
+	}
+
+	writeProductsFile();
+
+	res.send(); 
+})
+
 app.post('/addProduct',function(req,res){
 	products.push(req.body);
 

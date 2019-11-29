@@ -42,7 +42,7 @@ function addProduct()
 
 	if(inputValidate(objProduct))
 	{
-		sendData(objProduct);
+		sendData(objProduct,1);
 		products.push(objProduct);
 
 		displayProducts(objProduct);
@@ -58,7 +58,32 @@ function addProduct()
 
 function editProduct()
 {
-	console.log(selectedProductIndex);
+	var objProduct = new Object();
+	
+	objProduct.Id = products[selectedProductIndex].Id;
+ 	objProduct.Name = document.getElementById("txtProductName1").value;
+    objProduct.Desc = document.getElementById("txtProductDesc1").value;
+	objProduct.Price = parseInt(document.getElementById("txtProductPrice1").value);
+	objProduct.Quantity = parseInt(document.getElementById("txtProductQuantity1").value);
+
+	if(inputValidate(objProduct))
+	{
+		sendData(objProduct,2);
+		products[selectedProductIndex]=objProduct;
+   		
+   		var divId=products[selectedProductIndex].Id;
+   		var childN =document.getElementById(divId).childNodes;
+
+   		childN[1].innerHTML=products[selectedProductIndex].Name;
+   		childN[3].innerHTML=products[selectedProductIndex].Desc;
+   		childN[5].innerHTML="Rs. "+products[selectedProductIndex].Price;
+   		childN[7].innerHTML="Quantity :- "+products[selectedProductIndex].Quantity;
+
+	 	document.getElementById('txtProductName1').value="";
+	 	document.getElementById('txtProductDesc1').value="";
+	 	document.getElementById('txtProductPrice1').value="";
+	 	document.getElementById('txtProductQuantity1').value="";
+	}
 }
 
 function inputValidate(objProduct)
@@ -172,69 +197,9 @@ function displayProducts(objProduct)
 										  }
 							     );
 
-    // btnDelete.addEventListener("click",function(event)
-				// 					  {
-				// 						   var targetParent = event.target.parentNode;
-				// 						   var selectedProductIndex = getProductIndex(parseInt(targetParent.id));
-
-				// 						   var selectedCartProductIndex = getCartProductIndex(parseInt(targetParent.id));
-				// 						   if(selectedCartProductIndex!=-1)
-				// 						   {										   
-				// 							   var amountDeduction = cartProducts[selectedCartProductIndex].Price*(cartProducts[selectedCartProductIndex].Quantity);
-				// 							   cartTotalBill-=amountDeduction;
-											    
-				// 							   x = JSON.stringify(cartTotalBill);
-				// 							   localStorage.setItem('cartTotalBill',x);
-
-				// 							   removeFromCartProductsArray(selectedCartProductIndex);
-	   //  								   }
-										   
-				// 						   removeFromProductsArray(selectedProductIndex);
-				// 						   targetParent.parentNode.removeChild(targetParent);
-										   
-				// 						   x = JSON.stringify(products);
-    // 									   localStorage.setItem('user1',x);
-				// 					  }
-				// 			);
-
-    // btnAddButton.addEventListener("click", function(event)
-				// 							{
-				// 								 var x = parseInt(event.target.parentNode.id);
-				// 								 var selectedProductIndex = getProductIndex(x);
-												 
-				// 								 addToCart(selectedProductIndex);
-				// 							}
-				// 				 );
-
 	divListProducts.appendChild(divProduct);
 	
     insertBlankLine(divListProducts);
-
-	// var a = '<div class="container-fluid" id="';
-	// var x = '" align="center"><div class="col-sm-3"><img class="images" src="img/8.jpg"><div class="product_details"><span id="productNameDisp" style="margin-top: 1vw;"><a href="#">';
-	// var b = '</a></span><br><span id="productDescDisp">';
-	// var c = '</span><br><span id="productAmountDisp">Rs. ';
-	// var d = '</span><br><span id="productQuantityDisp">Quantity :- ';
-	// var e = '</span><br><div class="btn-group" style="margin-top: 0.5vw;"><button type="button" class="btn btn-warning" id="'+10000+objProduct.Id+'"  data-toggle="modal" data-target="#myModal1">Edit</button><button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button></div><div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div></div></div></div><br>';
-	// //var text=;
-
-	// $('#productsDisp').append(a+objProduct.Id+x+objProduct.Name+b+objProduct.Desc+c+objProduct.Price+d+objProduct.Quantity+e);
-
-	// var btnId=10000+objProduct.Id;
-	// var btnEdit = document.getElementById('btnId');
-	// btnEdit.addEventListener("click",function(event)
-	// 									  {
-	// 									  	var x = parseInt(event.target.parentNode.parentNode.parentNode.parentNode.id);
-	// 										selectedProductIndex = getProductIndex(x);
-
-	// 										document.getElementById('txtProductName1').value=products[selectedProductIndex].Name;
-	// 									 	document.getElementById('txtProductDesc1').value=products[selectedProductIndex].Desc;
-	// 									 	document.getElementById('txtProductPrice1').value=products[selectedProductIndex].Price;
-	// 									 	document.getElementById('txtProductQuantity1').value=products[selectedProductIndex].Quantity;
-
-	// 										 //editProductDetails(selectedProductIndex,selectedCartProductIndex);
-	// 									  }
-	// 						     );
 }
 
 function insertBlankLine(targetElement)
@@ -250,15 +215,23 @@ function getProductIndex(id)
         if (products[i].Id == id)
         {
         	return i;
-        } 
-			
+        } 			
     }
 }
 
-function sendData(objProduct)
+function sendData(objProduct,option)
 {
-	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "/addProduct");
+	var xhttp = new XMLHttpRequest();				
+
+	if(option==1)
+	{
+		xhttp.open("POST", "/addProduct");
+	}
+	else if(option==2)
+	{
+		xhttp.open("POST", "/editProduct");
+	}
+
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send(JSON.stringify(objProduct));
 }
