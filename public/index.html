@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <title>ShopMall</title>
+  <link rel="icon" type="image/ico" href="img/logo.png" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -83,14 +84,14 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Add Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   	<div class="modal-dialog">
 		<!-- Modal content-->
     	<div class="modal-content">
       		<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal">&times;</button>
-        		<h4 class="modal-title model-heading">Add Product</h4>
+        		<h4 class="modal-title model-heading" id="model_heading">Add Product</h4>
       		</div>
 	      	<div class="modal-body">
 	      		<div class="form-group">
@@ -108,45 +109,37 @@
 	    </div>
 	</div>
 </div>
+
+<!-- Edit Modal -->
+<div id="myModal1" class="modal fade" role="dialog">
+  	<div class="modal-dialog">
+		<!-- Modal content-->
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        		<h4 class="modal-title model-heading" id="model_heading">Edit Product</h4>
+      		</div>
+	      	<div class="modal-body">
+	      		<div class="form-group">
+	      			<br>
+				    <input type="text" class="form-control" id="txtProductName1" placeholder="Product Name"><br>
+				    <input type="text" class="form-control" id="txtProductDesc1" placeholder="Product Description"><br>
+				    <input type="text" class="form-control" id="txtProductPrice1" placeholder="Product Amount"><br>
+				    <input type="text" class="form-control" id="txtProductQuantity1" placeholder="Product Quantity">
+				</div>
+	      	</div>
+	      	<div class="modal-footer">
+	      		<button type="button" class="btn btn-success" id="addProductButton" data-dismiss="modal" onclick="editProduct()">&nbsp;&nbsp;Edit&nbsp;&nbsp;</button>
+	        	<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
   
 <br><br>
 
-<div class="container" id="productsDisp">
-	<!-- <div class="container-fluid" align="center">
-		<div class="col-sm-3">
-			<img class="images" src="img/8.jpg">
-			<div class="product_details">
-				<span id="productNameDisp" style="margin-top: 1vw;"><a href="#">{Product Name}</a></span><br>
-				<span id="productDescDisp">{Product Description}</span><br>
-				<span id="productAmountDisp">Rs {Product Amount}</span><br>
-				<span id="productQuantityDisp">Quantity :- {Product Quantity}</span><br>
-				<div class="btn-group" style="margin-top: 0.5vw;">
-				  <button type="button" class="btn btn-warning" onclick="editProduct()">Edit</button>
-				  <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
-				</div>
-				<div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
-			</div>
-		</div>
-	</div>
-	<br>
-
-	<div class="container-fluid" align="center">
-		<div class="col-sm-3">
-			<img class="images" src="img/8.jpg">
-			<div class="product_details">
-				<span id="productNameDisp" style="margin-top: 1vw;"><a href="#">{Product Name}</a></span><br>
-				<span id="productDescDisp">{Product Description}</span><br>
-				<span id="productAmountDisp">Rs {Product Amount}</span><br>
-				<span id="productQuantityDisp">Quantity :- {Product Quantity}</span><br>
-				<div class="btn-group" style="margin-top: 0.5vw;">
-				  <button type="button" class="btn btn-warning" onclick="editProduct()">Edit</button>
-				  <button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button>
-				</div>
-				<div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
-			</div>
-		</div>
-	</div>
-	<br> -->
+<div class="container" id="divListProducts">
+	
 </div>
 
 <br><br>

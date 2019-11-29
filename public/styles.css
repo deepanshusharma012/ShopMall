@@ -14,23 +14,14 @@
 	padding-top: 8px;
 }
 
-.images{
+.productImages{
 	border: 1px solid #c2d6d6;
-}
-
-.product_details{
-	border: 1px solid #94b8b8;
-	width: 86%;
-}
-
-h5{
-	
-}
-
-h6{
-	font-size: 14px;
 }
 
 #productNameDisp{
 	font-size: 17px;
+}
+
+label{
+	font-size: 14px;
 }
