@@ -5,7 +5,7 @@ var selectedProductIndex=null;
 function loadProducts()
 {
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange=function() {
+	/*xhttp.onreadystatechange=function() {
 	    if (this.readyState == 4 && this.status == 200) {
 	    	var arr = JSON.parse(this.responseText);
 
@@ -23,14 +23,49 @@ function loadProducts()
 				}
 			}
 
+			console.log(products);
+			console.log(max+" "+productId);
+
 			productId=max+1;
 	    }
-	};
+	};*/
 
 	xhttp.open("GET", "/loadProducts");
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send();
+
+	xhttp.addEventListener("load",function(res){                      //this is used instead of onreadystatechange...onreadystatechange will only be used when we need all stages like in bank req is send, is recieved, is analysed and so on!!....therefore we should use addEventListner-load instead!!
+		console.log(JSON.parse(this.responseText).data);
+		if(JSON.parse(this.responseText).status)
+		{
+			var arr = JSON.parse(this.responseText).data;
+
+			var max=0;
+			if(arr){
+				for(i=0;i<arr.length;i++)
+				{
+					if(arr[i].Id>max)
+					{
+						max=arr[i].Id;
+					}
+					products.push(arr[i]);
+					displayProducts(arr[i]);
+					productId++;
+				}
+			}
+
+			console.log(products);
+			console.log(max+" "+productId);
+
+			productId=max+1;
+		}
+		else
+		{
+			alert('Something went wrong!!');
+		}
+	});
 }
+
 
 function addProduct() 
 {
@@ -127,7 +162,9 @@ function displayProducts(objProduct)
 
 	var divProduct = document.createElement("div");
 	divProduct.setAttribute("id", objProduct.Id);
-	divProduct.setAttribute("style", "border: 1px solid #94b8b8;width: 16vw;text-align: center;");
+	divProduct.setAttribute("style", "border: 1px solid #94b8b8;text-align: center;width: 16vw;float:left;margin-right: 5vw;margin-left: 5vw;margin-bottom: 4vw;margin-top: 4vw;");
+
+	//width: 16vw;
 
 	var imgProduct = document.createElement("img");
 	imgProduct.setAttribute("class","productImages");
@@ -213,10 +250,28 @@ function displayProducts(objProduct)
 									  }
 							);
 
+    btnAddButton.addEventListener("click", function(event)
+											{
+												 var x = parseInt(event.target.parentNode.id);
+												 var selectedProductIndex = getProductIndex(x);
+												 
+												 addToCart(selectedProductIndex);
+											}
+								 );
+
 	divListProducts.appendChild(divProduct);
 	
-    insertBlankLine(divListProducts);
-    
+    //insertBlankLine(divListProducts);
+
+	// var a = '<div class="container-fluid" id="';
+	// var x = '" align="center"><div class="col-sm-3"><img class="images" src="img/8.jpg"><div class="product_details"><span id="productNameDisp" style="margin-top: 1vw;"><a href="#">';
+	// var b = '</a></span><br><span id="productDescDisp">';
+	// var c = '</span><br><span id="productAmountDisp">Rs. ';
+	// var d = '</span><br><span id="productQuantityDisp">Quantity :- ';
+	// var e = '</span><br><div class="btn-group" style="margin-top: 0.5vw;"><button type="button" class="btn btn-warning" id="'+10000+objProduct.Id+'"  data-toggle="modal" data-target="#myModal1">Edit</button><button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button></div><div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div></div></div></div><br>';
+	// //var text=;
+
+	// $('#productsDisp').append(a+objProduct.Id+x+objProduct.Name+b+objProduct.Desc+c+objProduct.Price+d+objProduct.Quantity+e);
 }
 
 function insertBlankLine(targetElement)
@@ -275,6 +330,31 @@ function searchData()
 	xhttp.send();
 }
 
+function addToCart(selectedProductIndex)
+{
+	if(products[selectedProductIndex].Quantity>0)
+	{
+		products[selectedProductIndex].Quantity=products[selectedProductIndex].Quantity-1;
+
+		var objProduct = new Object();
+
+		objProduct.userId="1";
+		objProduct.productId=products[selectedProductIndex].Id;
+
+		sendData(objProduct,4);
+
+		var divId=products[selectedProductIndex].Id;
+	    var childN =document.getElementById(divId).childNodes;
+		childN[7].innerHTML="Quantity :- "+products[selectedProductIndex].Quantity;
+
+		//updateCart(selectedProductIndex);
+	}
+	else
+	{
+		alert("Item is sold out");
+	}
+}
+
 function sendData(objProduct,option)
 {
 	var xhttp = new XMLHttpRequest();				
@@ -290,6 +370,10 @@ function sendData(objProduct,option)
 	else if(option==3)
 	{
 		xhttp.open("POST", "/deleteProduct");
+	}
+	else if(option==4)
+	{
+		xhttp.open("POST", "/addToCart");
 	}
 
 	xhttp.setRequestHeader("Content-Type", "application/json");
