@@ -69,6 +69,88 @@ app.get('/getProduct',function(req,res){
 	}
 });
 
+app.post('/updateCartProducts',function(req,res){
+	var obj = req.body;
+
+	var userIndex = getUserIndex(obj.userId);
+	var cartIndex = getCartIndex(userIndex,obj.productId);
+
+	users[userIndex].userCartProducts.splice(cartIndex,1);
+
+	writeUsersFile();
+
+	res.send();
+});
+
+app.post('/updateCartTotalBill',function(req,res){
+	var obj = req.body;
+
+	var userIndex = getUserIndex(obj.userId);
+
+	users[userIndex].userCartTotal=obj.cartTotalBill;
+
+	writeUsersFile();
+
+	res.send();
+});
+
+app.post('/updateCart',function(req,res){
+	var obj = req.body;
+	var flag=0;
+
+	var productIndex = getProductIndex(obj.productId);
+	var userIndex = getUserIndex(obj.userId);
+	var cartIndex = getCartIndex(userIndex,obj.productId);
+
+	if(obj.operation==2)                                                 // Case of plus
+	{
+		if(products[productIndex].Quantity>0)
+		{
+			users[userIndex].userCartProducts[cartIndex].productQuantity++;
+			products[productIndex].Quantity=products[productIndex].Quantity-1;
+
+			users[userIndex].userCartTotal=users[userIndex].userCartTotal+products[productIndex].Price;
+
+			flag=1;			
+		}
+	}
+	else if(obj.operation==1)                                             // Case of minus
+	{
+		if(users[userIndex].userCartProducts[cartIndex].productQuantity>1)
+		{
+			users[userIndex].userCartProducts[cartIndex].productQuantity--;
+			products[productIndex].Quantity=products[productIndex].Quantity+1;
+
+			users[userIndex].userCartTotal=users[userIndex].userCartTotal-products[productIndex].Price;
+
+			flag=1;			
+		}
+	}
+	else if(obj.operation==3)                                             // Case of remove
+	{
+		var cartQuantity = users[userIndex].userCartProducts[cartIndex].productQuantity;
+		products[productIndex].Quantity=products[productIndex].Quantity+cartQuantity;
+
+		users[userIndex].userCartTotal=users[userIndex].userCartTotal-(cartQuantity*products[productIndex].Price);
+
+		users[userIndex].userCartProducts.splice(cartIndex,1);
+
+		flag=1;		
+	}
+	
+	if(flag==1){
+		writeProductsFile();
+		writeUsersFile();
+		res.json({"status":"true","data":users[userIndex].userCartTotal});
+	}
+	else
+		res.json({"status":"false"});
+
+});
+
+
+
+
 //------------cart over -----------------
 
 app.get('/productSearch',function(req,res){

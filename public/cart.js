@@ -12,14 +12,14 @@ function loadCart()
 	xhttp.send();
 
 	xhttp.addEventListener("load",function(res){
-		if(JSON.parse(this.responseText).status)
+		if(JSON.parse(this.responseText).status=="true")
 		{
 			var arr = JSON.parse(this.responseText).data.userCartProducts;
 			if(arr){
 				for(i=0;i<arr.length;i++)
 				{
 					cartProducts.push(arr[i]);
-					getCartProducts(arr[i]);
+					getCartProducts(arr[i],updateCartTotalBill);
 				}
 			}
 		}
@@ -30,15 +30,24 @@ function loadCart()
 	});
 }
 
+function updateCartTotalBill(){
+	var xhr = new XMLHttpRequest();
+	var obj = new Object();
+	obj.userId=1;
+	obj.cartTotalBill=cartTotalBill;
+	xhr.open("POST", "/updateCartTotalBill");
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.send(JSON.stringify(obj));
+}
 
-function getCartProducts(objCartProduct)
+function getCartProducts(objCartProduct,callback)
 {
 	var prodId=objCartProduct.productId;
 	var prodQuantity=objCartProduct.productQuantity;
 
 	var xhttp = new XMLHttpRequest();
 	xhttp.addEventListener("load",function(res){
-		if(JSON.parse(this.responseText).status)
+		if(JSON.parse(this.responseText).status=="true")
 		{
 			var obj = JSON.parse(this.responseText).data;
 
@@ -47,12 +56,21 @@ function getCartProducts(objCartProduct)
 
 			divSubtotal.innerHTML="Rs. "+cartTotalBill;
 			divTotal.innerHTML="Rs. "+cartTotalBill;
+
+			callback();
 		}
 		else
 		{
-			alert('Product is currently unavailable!!');
+			var xhr = new XMLHttpRequest();
+			var obj = new Object();
+			obj.userId=1;
+			obj.productId=prodId;
+			xhr.open("POST", "/updateCartProducts");
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.send(JSON.stringify(obj));
 
-			
+			cartProducts.splice(cartProducts.length-1,1);
+			//alert('Product is currently unavailable!!');			
 		}
 	});
 
@@ -152,13 +170,67 @@ function displayCartProducts(objProduct,objProductQuantity)
 
 	spanQuantityMin.addEventListener("click", function(event)
 											{
-												
+												var obj=new Object();
+
+												var x = parseInt(event.target.parentNode.parentNode.parentNode.id);
+
+												obj.userId=1;
+												obj.productId=x;
+												obj.operation=1;
+
+												var xhttp = new XMLHttpRequest();
+												xhttp.addEventListener("load",function(res){
+													if(JSON.parse(this.responseText).status=="true")
+													{
+														var childN = event.target.parentNode.childNodes;
+														childN[0].innerHTML=parseInt(childN[0].innerHTML)-1;
+
+														cartTotalBill=JSON.parse(this.responseText).data;
+														divSubtotal.innerHTML="Rs. "+cartTotalBill;
+														divTotal.innerHTML="Rs. "+cartTotalBill;
+													}
+													else
+													{
+														alert("Item Quantity reached it's min count");
+													}
+												});
+
+												xhttp.open("POST", "/updateCart");
+												xhttp.setRequestHeader("Content-Type", "application/json");
+												xhttp.send(JSON.stringify(obj));
 											}
 								 );
 
 	spanQuantityPlus.addEventListener("click", function(event)
 											{
+												var obj=new Object();
 
+												var x = parseInt(event.target.parentNode.parentNode.parentNode.id);
+
+												obj.userId=1;
+												obj.productId=x;
+												obj.operation=2;
+
+												var xhttp = new XMLHttpRequest();
+												xhttp.addEventListener("load",function(res){
+													if(JSON.parse(this.responseText).status=="true")
+													{
+														var childN = event.target.parentNode.childNodes;
+														childN[0].innerHTML=parseInt(childN[0].innerHTML)+1;
+
+														cartTotalBill=JSON.parse(this.responseText).data;
+														divSubtotal.innerHTML="Rs. "+cartTotalBill;
+														divTotal.innerHTML="Rs. "+cartTotalBill;
+													}
+													else
+													{
+														alert('Item is no longer unavailable');
+													}
+												});
+
+												xhttp.open("POST", "/updateCart");
+												xhttp.setRequestHeader("Content-Type", "application/json");
+												xhttp.send(JSON.stringify(obj));
 											}
 								 );
 
@@ -170,7 +242,36 @@ function displayCartProducts(objProduct,objProductQuantity)
 
 	btnRemove.addEventListener("click", function(event)
 											{
-												
+												var obj=new Object();
+
+												var targetParent = event.target.parentNode.parentNode;
+												var x = parseInt(targetParent.id);
+												var cartIndex = getCartIndex(x);
+
+												obj.userId=1;
+												obj.productId=x;
+												obj.operation=3;
+
+												var xhttp = new XMLHttpRequest();
+												xhttp.addEventListener("load",function(res){
+													if(JSON.parse(this.responseText).status=="true")
+													{
+														cartProducts.splice(cartIndex,1);
+														targetParent.parentNode.removeChild(targetParent);
+
+														cartTotalBill=JSON.parse(this.responseText).data;
+														divSubtotal.innerHTML="Rs. "+cartTotalBill;
+														divTotal.innerHTML="Rs. "+cartTotalBill;
+													}
+													else
+													{
+														alert('Item is no longer unavailable');
+													}
+												});
+
+												xhttp.open("POST", "/updateCart");
+												xhttp.setRequestHeader("Content-Type", "application/json");
+												xhttp.send(JSON.stringify(obj));
 											}
 								 );
 
@@ -182,3 +283,14 @@ function insertBlankLine(targetElement)
     targetElement.appendChild(br);
 }
 
+function getCartIndex(productId)
+{
+	for(i=0;i<cartProducts.length;i++)
+	{
+		if(cartProducts[i].productId==productId)
+		{
+			return i;
+		}
+	}
+	return -1;	
+}
