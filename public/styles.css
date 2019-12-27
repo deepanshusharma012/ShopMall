@@ -6,6 +6,8 @@
 	background-color: #333333;
 	width: 100%;
 	height: 43px;
+	position:fixed;
+    bottom:0;
 }
 
 .footer-text{
@@ -18,14 +20,17 @@
 	border: 1px solid #c2d6d6;
 }
 
+.cartProductImages{
+	border: 1px solid #c2d6d6;
+	height: 150px;
+	width: 150px;
+	margin: 8px 4px;
+}
+
+
 #productNameDisp{
 	font-size: 17px;
 }
-
-/*#sname{
-	margin-top: 0.2vw;
-	width: 10vw;
-}*/
 
 label{
 	font-size: 14px;

@@ -5,30 +5,6 @@ var selectedProductIndex=null;
 function loadProducts()
 {
 	var xhttp = new XMLHttpRequest();
-	/*xhttp.onreadystatechange=function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	    	var arr = JSON.parse(this.responseText);
-
-			var max=0;
-			if(arr){
-				for(i=0;i<arr.length;i++)
-				{
-					if(arr[i].Id>max)
-					{
-						max=arr[i].Id;
-					}
-					products.push(arr[i]);
-					displayProducts(arr[i]);
-					productId++;
-				}
-			}
-
-			console.log(products);
-			console.log(max+" "+productId);
-
-			productId=max+1;
-	    }
-	};*/
 
 	xhttp.open("GET", "/loadProducts");
 	xhttp.setRequestHeader("Content-Type", "application/json");
@@ -260,18 +236,6 @@ function displayProducts(objProduct)
 								 );
 
 	divListProducts.appendChild(divProduct);
-	
-    //insertBlankLine(divListProducts);
-
-	// var a = '<div class="container-fluid" id="';
-	// var x = '" align="center"><div class="col-sm-3"><img class="images" src="img/8.jpg"><div class="product_details"><span id="productNameDisp" style="margin-top: 1vw;"><a href="#">';
-	// var b = '</a></span><br><span id="productDescDisp">';
-	// var c = '</span><br><span id="productAmountDisp">Rs. ';
-	// var d = '</span><br><span id="productQuantityDisp">Quantity :- ';
-	// var e = '</span><br><div class="btn-group" style="margin-top: 0.5vw;"><button type="button" class="btn btn-warning" id="'+10000+objProduct.Id+'"  data-toggle="modal" data-target="#myModal1">Edit</button><button type="button" class="btn btn-danger" onclick="deleteProduct()">Delete</button></div><div style="margin-top: 0.5vw;margin-bottom: 0.5vw;><button type="button" class="btn btn-info" onclick="addToCart()">&nbsp;&nbsp;&nbsp;&nbsp;Add to Cart&nbsp;&nbsp;&nbsp;&nbsp;</button></div></div></div></div><br>';
-	// //var text=;
-
-	// $('#productsDisp').append(a+objProduct.Id+x+objProduct.Name+b+objProduct.Desc+c+objProduct.Price+d+objProduct.Quantity+e);
 }
 
 function insertBlankLine(targetElement)
@@ -346,8 +310,6 @@ function addToCart(selectedProductIndex)
 		var divId=products[selectedProductIndex].Id;
 	    var childN =document.getElementById(divId).childNodes;
 		childN[7].innerHTML="Quantity :- "+products[selectedProductIndex].Quantity;
-
-		//updateCart(selectedProductIndex);
 	}
 	else
 	{

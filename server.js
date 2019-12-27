@@ -11,12 +11,6 @@ var data;
 app.use(express.json());
 app.use(express.static("public"));
 
-// fs.readFile('public/products.txt', (err, data) => {
-//   if (err) throw err;
-//   if(data)
-// 	products=JSON.parse(data).prod;
-// });
-
 function readFile(path,callback){
 	fs.readFile(path,function(err,data){
 		if(err)
@@ -43,16 +37,39 @@ app.get('/loadProducts',function(req,res){
 		if(err) throw err;
 		if(data){
 			products=data.prod;
-			//res.json(products);
 			res.json({"status":"true","data":products});
 		}
 		else
 			res.json({"status":"false","message":"this type of error"});
-		//data.push(product);
 	});
-
-	//res.json(products);
 });
+
+
+//------------cart ahead -----------------
+
+app.get('/loadCartProducts',function(req,res){
+	if(users)
+	{
+		res.json({"status":"true","data":users[0]});
+	}
+	else
+		res.json({"status":"false","message":"this type of error"});
+});
+
+app.get('/getProduct',function(req,res){
+
+	var productIndex = getProductIndex(req.query.Id);
+	if(productIndex!=-1)
+	{
+		res.json({"status":"true","data":products[productIndex]});
+	}
+	else
+	{
+		res.json({"status":"false","message":"product is unavailable"});
+	}
+});
+
+//------------cart over -----------------
 
 app.get('/productSearch',function(req,res){
 
