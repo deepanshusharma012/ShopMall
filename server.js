@@ -1,5 +1,7 @@
 var express=require("express");
 var fs=require("fs");
+var multer  = require('multer')
+var path = require('path')
 var app=express();
 var port=4000;
 
@@ -9,6 +11,9 @@ var users = [];
 var data;
 
 app.use(express.json());
+
+app.use(express.urlencoded({extended: true})); 
+
 app.use(express.static("public"));
 
 function readFile(path,callback){
@@ -148,10 +153,58 @@ app.post('/updateCart',function(req,res){
 
 });
 
+//------------ cart over -----------------
 
+//--------- multer function ahead -------------
 
+function sanitizeFile(file, cb) {
+    let fileExts = ['png', 'jpg', 'jpeg', 'gif']
+    let isAllowedExt = fileExts.includes(file.originalname.split('.')[1].toLowerCase());
+    let isAllowedMimeType = file.mimetype.startsWith("image/")
+    if(isAllowedExt && isAllowedMimeType){
+        return cb(null ,true)
+    }
+    else{
+        cb('Error: File type not allowed!')
+    }
+}
 
-//------------cart over -----------------
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/img/productImages')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now()+ file.fieldname+'.'+file.originalname.split('.')[1].toLowerCase())
+    }
+  })
+   
+var upload = multer({ storage: storage ,
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter: function (req, file, cb) {
+        sanitizeFile(file, cb);
+    }
+}).single('productPic')
+
+app.post('/uploadProductPic',(req,res)=>{
+    upload(req, res, (err) => {
+        if (err){ 
+            res.send({"status":"false","msg":err})
+        }else{
+            if (req.file == undefined) {
+                res.send({"status":"false","msg":'No file Selected'})
+            
+            }
+            else{
+                res.send({"status":"true","productPicURL":req.file.filename});
+            }
+        }
+    
+    })
+});
+
+//--------- multer function over -------------
 
 app.get('/productSearch',function(req,res){
 

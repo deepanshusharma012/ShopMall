@@ -94,7 +94,7 @@ function displayCartProducts(objProduct,objProductQuantity)
 
 	var imgProduct = document.createElement("img");
 	imgProduct.setAttribute("class","cartProductImages");
-	imgProduct.setAttribute("src","img/8.jpg");
+	imgProduct.setAttribute("src",objProduct.UrlImage);
 	divImage.appendChild(imgProduct);
 
 	divProduct.appendChild(divImage);

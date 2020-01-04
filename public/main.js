@@ -52,6 +52,7 @@ function addProduct()
     objProduct.Desc = document.getElementById("txtProductDesc").value;
 	objProduct.Price = parseInt(document.getElementById("txtProductPrice").value);
 	objProduct.Quantity = parseInt(document.getElementById("txtProductQuantity").value);
+	objProduct.UrlImage = "img/productImages/"+document.getElementById('urlProductPic').innerHTML;
 
 	if(inputValidate(objProduct))
 	{
@@ -64,6 +65,7 @@ function addProduct()
 	 	document.getElementById('txtProductDesc').value="";
 	 	document.getElementById('txtProductPrice').value="";
 	 	document.getElementById('txtProductQuantity').value="";
+	 	document.getElementById('urlProductPic').innerHTML="";
 
 		productId++;
 	}
@@ -78,6 +80,7 @@ function editProduct()
     objProduct.Desc = document.getElementById("txtProductDesc1").value;
 	objProduct.Price = parseInt(document.getElementById("txtProductPrice1").value);
 	objProduct.Quantity = parseInt(document.getElementById("txtProductQuantity1").value);
+	objProduct.UrlImage = products[selectedProductIndex].UrlImage;
 
 	if(inputValidate(objProduct))
 	{
@@ -126,6 +129,10 @@ function inputValidate(objProduct)
 		alert('Please Enter a valid product Quantity. (Only Numeric values)');
 		return false;
 	}
+	else if(objProduct.UrlImage==""){
+		alert('Please choose the correct image.');
+		return false;
+	}
 	else
 	{
 		return true;
@@ -140,11 +147,9 @@ function displayProducts(objProduct)
 	divProduct.setAttribute("id", objProduct.Id);
 	divProduct.setAttribute("style", "border: 1px solid #94b8b8;text-align: center;width: 16vw;float:left;margin-right: 5vw;margin-left: 5vw;margin-bottom: 4vw;margin-top: 4vw;");
 
-	//width: 16vw;
-
 	var imgProduct = document.createElement("img");
 	imgProduct.setAttribute("class","productImages");
-	imgProduct.setAttribute("src","img/8.jpg");
+	imgProduct.setAttribute("src",objProduct.UrlImage);
 	divProduct.appendChild(imgProduct);
 
 	var aProductName = document.createElement("a");
@@ -315,6 +320,49 @@ function addToCart(selectedProductIndex)
 	{
 		alert("Item is sold out");
 	}
+}
+
+function checkFileDetails() {
+  	var fi = document.getElementById('myfile');
+  	if (fi.files.length > 0) { 
+  		for (var i = 0; i <= fi.files.length - 1; i++) {
+        	var fileName, fileExtension;
+
+        	fileName = fi.files.item(i).name;
+        	fileExtension = fileName.replace(/^.*\./, '');
+
+		    if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg') {
+		    }
+		    else {
+		        alert("Please select correct Image.");
+		    }
+      	}
+  	}
+}
+
+function uploadFile()
+{
+	var form = document.getElementById('file-form');
+	var fileSelect = document.getElementById('myfile');
+
+	var file = fileSelect.files[0];
+
+	var formData = new FormData();
+	formData.append('productPic',file);
+
+	var xhr = new XMLHttpRequest();
+
+	xhr.onload = function () {
+	  	if (JSON.parse(this.responseText).status=="true") {
+	    	alert('Image uploaded successfully!');
+	    	document.getElementById('urlProductPic').innerHTML=JSON.parse(this.responseText).productPicURL;
+	  	} else {
+	    	alert(JSON.parse(this.responseText).msg);
+	  	}
+	};
+
+	xhr.open("POST", "/uploadProductPic",true);
+	xhr.send(formData);
 }
 
 function sendData(objProduct,option)

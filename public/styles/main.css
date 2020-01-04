@@ -18,6 +18,8 @@
 
 .productImages{
 	border: 1px solid #c2d6d6;
+	width: 200px;
+	height: 200px;
 }
 
 .cartProductImages{
