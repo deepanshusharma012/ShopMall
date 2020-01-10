@@ -97,23 +97,21 @@
         		<h4 class="modal-title model-heading" id="model_heading">Add Product</h4>
       		</div>
 	      	<div class="modal-body">
-	      		<div class="form-group">
+	      		<div class="form-group centered">
 	      			<br>
 				    <input type="text" class="form-control" id="txtProductName" placeholder="Product Name"><br>
 				    <input type="text" class="form-control" id="txtProductDesc" placeholder="Product Description"><br>
 				    <input type="text" class="form-control" id="txtProductPrice" placeholder="Product Amount"><br>
 				    <input type="text" class="form-control" id="txtProductQuantity" placeholder="Product Quantity">
 				    <form id="file-form" method="POST" action="/uploadProductPic" enctype="multipart/form-data" target="_self">	
-		          		<div class="row" style="text-align: center;margin: 2vw 0 0 4.5vw;position: relative;">
-			            	<input class="col-md-6" type="file" name="productPic" id="myfile" onchange="checkFileDetails()"/>
-			            	<button class="col-md-3 btn btn-info" type="button" onclick="uploadFile()">Upload</button>
-			            	<span id="urlProductPic" style="display: none;"></span>
+		          		<div class="row" style="text-align: center;margin: 2vw 0 0 0;position: relative;"> 
+			            	<input class="col-md-6 col-xs-offset-3" type="file" name="productPic" id="myfile" onchange="checkFileDetails()"/>
 			            </div>			            
 			        </form>
 				</div>
 	      	</div>
 	      	<div class="modal-footer">
-	      		<button type="button" class="btn btn-success" id="addProductButton" data-dismiss="modal" onclick="addProduct()">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+	      		<button type="button" class="btn btn-success" id="addProductButton" onclick="addProduct()">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
 	        	<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 	      	</div>
 	    </div>

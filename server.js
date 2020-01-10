@@ -187,23 +187,6 @@ var upload = multer({ storage: storage ,
     }
 }).single('productPic')
 
-app.post('/uploadProductPic',(req,res)=>{
-    upload(req, res, (err) => {
-        if (err){ 
-            res.send({"status":"false","msg":err})
-        }else{
-            if (req.file == undefined) {
-                res.send({"status":"false","msg":'No file Selected'})
-            
-            }
-            else{
-                res.send({"status":"true","productPicURL":req.file.filename});
-            }
-        }
-    
-    })
-});
-
 //--------- multer function over -------------
 
 app.get('/productSearch',function(req,res){
@@ -228,11 +211,48 @@ app.get('/productSearch',function(req,res){
 
 app.post('/addProduct',function(req,res){
 
-	products.push(req.body);
+	upload(req, res, (err) => {
+        if (err){ 
+            res.send({"status":"false","msg":err})
+        }else{
+            if (req.file == undefined) {
+                res.send({"status":"false","msg":'No file Selected'})
+            
+            }
+            else{
+            	var objProduct = new Object();
+	
+				objProduct.Id = req.body.Id;
+			 	objProduct.Name = req.body.Name;
+			    objProduct.Desc = req.body.Desc;
+				objProduct.Price = req.body.Price;
+				objProduct.Quantity = req.body.Quantity;
+				objProduct.UrlImage = "img/productImages/"+req.file.filename;
 
-	writeProductsFile();
+            	products.push(objProduct);
+				writeProductsFile();
+                res.send({"status":"true","productPicURL":objProduct.UrlImage});
+            }
+        }
+    
+    })
+});
 
-	res.send();
+app.post('/uploadProductPic',(req,res)=>{
+    upload(req, res, (err) => {
+        if (err){ 
+            res.send({"status":"false","msg":err})
+        }else{
+            if (req.file == undefined) {
+                res.send({"status":"false","msg":'No file Selected'})
+            
+            }
+            else{
+                res.send({"status":"true","productPicURL":req.file.filename});
+            }
+        }
+    
+    })
 });
 
 app.post('/editProduct',function(req,res){
@@ -358,8 +378,6 @@ function writeProductsFile()
 {
 	var objProduct = new Object();
 	objProduct.prod=products;
-
-	//console.log(objProduct);
 
 	fs.writeFile('public/products.txt', JSON.stringify(objProduct) , function (err) {
 	  if (err) throw err;
